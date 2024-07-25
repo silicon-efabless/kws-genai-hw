@@ -3,6 +3,9 @@
 - **LITERATURE**
   - **LLM-based HDL Generation**
     - Pearce H., et.al. _AutoChip: Automating HDL Generation Using LLM Feedback_ in DAC ’24([Link-To-Rxiv](https://arxiv.org/pdf/2311.04887))
+    - Pearce H., et.al., “_DAVE: Deriving Automatically Verilog from English_,” MLCAD ’20. ([Link](https://dl.acm.org/doi/10.1145/3380446.3430634))
+    - S. Thakur et al., “_Benchmarking Large Language Models for Automated Verilog RTL Code Generation_,” DATE'23 ([PDF](https://arxiv.org/pdf/2212.11140))
+
   - **Keyword Spotting**
     -  G. Sharma, wt.al., “_Trends in audio signal feature extraction methods_,” Applied Acoustics, vol. 158, p. 107020, Jan. 2020. ([PDF](https://calebrascon.info/AR/Topic4/addresources/features.pdf))
     - Y. Zhang, et.al., “_Hello Edge: Keyword Spotting on Microcontrollers_,” Feb. 14, 2018, arXiv ([PDF](https://arxiv.org/pdf/1711.07128))
