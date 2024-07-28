@@ -55,4 +55,41 @@ A tutorial on the RTL-to-GDS flow using open source toolchain.
 In this tutorial, we will use a simple counter to go through the entire flow.
 
 - **Design Verification (DV)** of the design using `iverilog` and `gtkwave`
-  - `iverilog -o counter.vvp counter.v tb_counter.v`
+  - `cd work`
+  - `iverilog -o counter.vvp ../rtl/counter.v ../tb/tb_counter.v`
+  - `vvp counter.vvp`
+  - `gtkwave test.vcd`
+
+- **Synthesis** using Yosys
+  - For synthesis, you need two inputs: the verilog code (`counter.v`) and the technology file (liberty, `sky130hd_tt.lib`) which contains the available _standard cells_ for creating the final layout.
+  - The Yosys commands are captured in the script `scripts/synthesis.tcl` 
+  - Change directory to a work directory and execute the script from the Yosys prompt:
+    - `cd work`
+    - `yosys`
+    - `yosys> script ../scripts/synthesis.tcl`
+      - If succesfull, there should be a synthesized netlist created at `../pd/synth.v`
+    - You can see the diagram of the netlist by typing `show`
+
+- **Gate-Level Simulation** of the synthesized netist.
+  - `iverilog -o counter.vvp ../pd/synth.v ../tb/tb_counter.v ../sky130hd/formal_pdk.v`
+    - `formal_pdk.v` contains the Verilog model of the _standard cells_ (nand/DFFs/etc)
+  - `vvp counter.vvp`
+  - `gtkwave test.vcd`
+  - **NOTE** Currently there is a syntax error in the file `formal_pdk.v`
+
+- **Static-Time Analysis (STA)** using OpenSTA.
+  - Simply, we need two files: the synthesized netlist (`../pd/synth.v`) and the _contraint file_ (`../scripts/top.sdc`)
+  - The constraint file contains the design constraints like clock speed, input delay, output delay etc.
+  - The list of STA commads are captured in the script `../scripts/sta.tcl`
+  - Start `sta` in the work directory and launch the script:
+    - `sta`
+    - `% source sta.tcl`
+  - If all the _setup/hold_ slacks are _positive_, then the design passes `STA`
+
+- **Physical Design (PD)** using openROAD
+  - OpenRoad consist of set of scripts integrated together to execute the physical design which has multiple steps like Floorplan, Power distribution network, global placement detailed placement, clock tree synthesis (CTS), Routing
+  - You can invoke the tool and run the script using command `openroad -gui ../scripts/physicalDesign.tcl` where `physicalDesign.tcl` is the script that is used for physical design.
+  - In the `physicalDesign.tcl` there are some subscripts included one of them is 'flow.tcl' but I have also divided the script into various subscripts for floorplanning then power distribution etc.
+  - You can comment flow.tcl and uncomment those files one by one to visualize each steps as mentioned in the first point.
+
+  - Now you can see the layout file in the user interface of OpenRoad.
