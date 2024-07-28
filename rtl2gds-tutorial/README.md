@@ -34,7 +34,7 @@ A tutorial on the RTL-to-GDS flow using open source toolchain.
     - `sudo make install`
     - If you want to quickly run through an example, follow the [Getting Started](https://github.com/YosysHQ/yosys#getting-started) section in the Yosys github site.
 
-- **OpenROAD** is a comprehensive tool for chip physical design that transforms a synthesized Verilog netlist into a routed layout. The OpenROAD can used in two ways:
+- **OpenROAD** (**OpenSTA** included) is a comprehensive tool for chip physical design that transforms a synthesized Verilog netlist into a routed layout. The OpenROAD can used in two ways:
   1. [OpenROAD StandAlone Application](https://github.com/The-OpenROAD-Project/OpenROAD) ([Doc](https://openroad.readthedocs.io/en/latest/main/README.html)) is a set of binaries for digital `Place \& Route (PnR)`  that can be used by any other RTL-GDSII flow.
   2. [OpenROAD Flow Script (ORFS)](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts) ([Doc](https://openroad-flow-scripts.readthedocs.io/en/latest/)) is the native OpenROAD flow that consists of a set of integrated scripts for an autonomous RTL-GDSII flow using OpenROAD and other open-source tools.
 
@@ -49,3 +49,10 @@ A tutorial on the RTL-to-GDS flow using open source toolchain.
     - `make`
     - `sudo make install`
   - Verify the installation by running `openroad`
+ 
+# Tutorial Flow
+
+In this tutorial, we will use a simple counter to go through the entire flow.
+
+- **Design Verification (DV)** of the design using `iverilog` and `gtkwave`
+  - `iverilog -o counter.vvp counter.v tb_counter.v`
