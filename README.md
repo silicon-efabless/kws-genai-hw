@@ -1,9 +1,22 @@
-#Resources
+# Resources
 
 - **LITERATURE**
-  - Pearce H., et.al. _AutoChip: Automating HDL Generation Using LLM Feedback_ in DAC ’24([Link-To-Rxiv](https://arxiv.org/pdf/2311.04887))
- 
+  - **LLM-based HDL Generation**
+    - Pearce H., et.al. _AutoChip: Automating HDL Generation Using LLM Feedback_ in DAC ’24([Link-To-Rxiv](https://arxiv.org/pdf/2311.04887))
+    - Pearce H., et.al., “_DAVE: Deriving Automatically Verilog from English_,” MLCAD ’20. ([Link](https://dl.acm.org/doi/10.1145/3380446.3430634))
+    - S. Thakur et al., “_Benchmarking Large Language Models for Automated Verilog RTL Code Generation_,” DATE'23 ([PDF](https://arxiv.org/pdf/2212.11140))
 
+  - **Keyword Spotting**
+    -  G. Sharma, wt.al., “_Trends in audio signal feature extraction methods_,” Applied Acoustics, vol. 158, p. 107020, Jan. 2020. ([PDF](https://calebrascon.info/AR/Topic4/addresources/features.pdf), [Link](https://doi.org/10.1016/j.apacoust.2019.107020)) : Nice summary article with a great summary of algorithms for feature extraction.
+    - Y. Zhang, et.al., “_Hello Edge: Keyword Spotting on Microcontrollers_,” Feb. 14, 2018, arXiv ([PDF](https://arxiv.org/pdf/1711.07128) | [Link](https://arxiv.org/abs/1711.07128) | [Code GitHub Page](https://github.com/ARM-software/ML-KWS-for-MCU) | [PaperSwitchCode](https://paperswithcode.com/paper/hello-edge-keyword-spotting-on)) : KWS immplementation on resource-contrained microconrollers.
+    - W. Han, et.al., “_An efficient MFCC extraction method in speech recognition_,” ISCAS, 2006, ([Link](https://doi.org/10.1109/ISCAS.2006.1692543) | [PDF](https://www.academia.edu/download/31107261/1660.pdf)) : An efficient algorithm to calculate the Mel-Frequency Cepstrum Coeffs (MFCC). 
+
+- **USEFUL LINKS**
+  - [Priyansu's KWS Github Page](https://github.com/Priyansu122/Project_keywordSpotter)
+  - [Priyansu's RTL2GDS Github Page](https://github.com/Priyansu122/SI2024_RTL_TO_GDS)
+  - [Priyansu's RTL2FPGA Github Page](https://github.com/Priyansu122/ASIC_FPGA_Design_Flow)
+
+ 
 # Abstract
 
 This project will aim to generate an entire hardware accelerator for the specific application of Keyword Spotting (KWS) using generative AI (gen-AI).
