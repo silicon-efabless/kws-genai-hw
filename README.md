@@ -13,6 +13,8 @@
 
 - **USEFUL LINKS**
   - [Priyansu's KWS Github Page](https://github.com/Priyansu122/Project_keywordSpotter)
+  - [Priyansu's RTL2GDS Github Page](https://github.com/Priyansu122/SI2024_RTL_TO_GDS)
+  - [Priyansu's RTL2GDS Github Page](https://github.com/Priyansu122/ASIC_FPGA_Design_Flow)
 
  
 # Abstract
