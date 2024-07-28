@@ -1,6 +1,8 @@
 # About
 A tutorial on the RTL-to-GDS flow using open source toolchain.
 
+![RTL2GDS ToolChain](../doc/rtl2gds-toolchain.svg)
+
 # Installation
 
 - Before installation, upgrade your distribution:
