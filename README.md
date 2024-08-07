@@ -21,13 +21,17 @@
 
 ![KWS Archh](doc/KWS-architecture.svg)
 
-Mel frequency cepstral coefficient (MFCC) features are widely used in applications such as keyword spotting (KWS) for extracting speech features such as a simple word "Alexa". In a typical all-digital immplementation, a digital microphone is used to read real-time data using an $I^2S$ serial interface. 
+Mel frequency cepstral coefficient (MFCC) features are widely used in applications such as keyword spotting (KWS) for extracting speech features such as a simple word "Alexa". In a typical all-digital immplementation, a digital microphone is used to read real-time data using an $I^2S$ serial interface. The serial data is converted to parallel bytes. 
 
-$y(n) = x(n) + \alpha x(n-1)$
+The first operation done on the input data is a pre-emphasis filter (high-pass) to remove the DC content from the signal. The pre-emphasis filter is typicall implemented as the following difference equation: 
 
+$y(n) = x(n) - \alpha x(n-1)$
 
+where $\alpha$ ranges from 0.9-1. To keep the hardware minimal, the fraction is implemented as a shift+add. For eg. $y(n) = x(n) - ( x(n) - x(n)/32 )$ which is a shift and add operation to realize $\alpha = 31/32 = 0.96875$
 
+After the pre-emphasis filter, the data is multiplied with a _window (hamming, hanning, etc.))_ to avoid spectral leakage from FFT operation. After the windowing, fast-fourier transform (FFT) is applied to the signal to find the frequency content of the signal. Then the linear frequency scale if converted to _Mel Log scale_ ( $Mel(f) = 2595 \cdot log_{10}(1 + f/700)$ ) to mimic the human ear perception. Then the _log_ of Mel frequency power is calculated and the DCT operation is done to generate the MFCC co-efficients. Finally, the MFCC co-efficients are used to classify the voice signal using a classifier such as Convolution Neural Netwrk (CNN), etc.
 
+#OLD STUFF
 This project will aim to generate an entire hardware accelerator for the specific application of Keyword Spotting (KWS) using generative AI (gen-AI).
 
 This project will target applications that are mostly dormant and are activated infrequently using a wake-up call such as "Wakeup Neo". It will also assume target applications to be very power conscious so it is using the bare minimum power when sleeping or dormant.
