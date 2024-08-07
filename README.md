@@ -17,7 +17,15 @@
   - [Priyansu's RTL2FPGA Github Page](https://github.com/Priyansu122/ASIC_FPGA_Design_Flow)
 
  
-# Abstract
+# Keyword Spotting (KWS) Architecture
+
+![KWS Archh](doc/KWS-architecture.svg)
+
+Mel frequency cepstral coefficient (MFCC) features are widely used in applications such as keyword spotting (KWS) for extracting speech features such as a simple word "Alexa". In a typical all-digital immplementation, a digital microphone is used to read real-time data using an I2S serial interface. 
+
+
+
+
 
 This project will aim to generate an entire hardware accelerator for the specific application of Keyword Spotting (KWS) using generative AI (gen-AI).
 
