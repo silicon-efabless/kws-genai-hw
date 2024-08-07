@@ -21,8 +21,9 @@
 
 ![KWS Archh](doc/KWS-architecture.svg)
 
-Mel frequency cepstral coefficient (MFCC) features are widely used in applications such as keyword spotting (KWS) for extracting speech features such as a simple word "Alexa". In a typical all-digital immplementation, a digital microphone is used to read real-time data using an I2S serial interface. 
+Mel frequency cepstral coefficient (MFCC) features are widely used in applications such as keyword spotting (KWS) for extracting speech features such as a simple word "Alexa". In a typical all-digital immplementation, a digital microphone is used to read real-time data using an $I^2S$ serial interface. 
 
+$y(n) = x(n) + \alpha x(n-1)$
 
 
 
