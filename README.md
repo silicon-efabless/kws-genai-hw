@@ -43,3 +43,9 @@ This architecture was simulated using Python to optimize the hardware without lo
 - **Input data width**: Typical microphone data-width is 24-bit but linear only up to 10-11 bit but, **7-bit** data-width seems a good compromise.
 - **FFT data-point**: Typically 128-point or 256-point FFT are used but even going down to **32-point** seems still a good choice.
 
+## Block Specs
+
+- **I2S to 7-bit** data de-serializer : There are 3 signals provided to the microphone, **WS, SCK, SD**. In mono mode, the WS signal is pulled low for 32 cycles and pulled high for 32 cycles. During the WS low period, 7-b MSB data is latched internally. The WS period is the sampling frequency ie. **4 kHz**.
+- **Pre-emphasis filter (HPF)**: Realize the following difference equation: $y(n) = x(n) - ( x(n) - x(n)/32 )$
+- **Hanning Window**: The serial data is fed to **32-byte pipeline** that is multiplied with the 32-byte pipeline register.
+- **32-point FFT $R2^2SDF$** : $R2^2SDF$ FFT is an architecture that realizes the FFT algorithm with minimal hardware.
