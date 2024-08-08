@@ -13,7 +13,7 @@
     - W. Han, et.al., “_An efficient MFCC extraction method in speech recognition_,” ISCAS, 2006, ([Link](https://doi.org/10.1109/ISCAS.2006.1692543) | [PDF](https://www.academia.edu/download/31107261/1660.pdf)) : An efficient algorithm to calculate the Mel-Frequency Cepstrum Coeffs (MFCC). 
 
 - **DATASHEETS/APP NOTES**
-  - 
+  - Datasheet SPH0645LM4H-B : Knowles I2S Digital Output MEMS Microphone. ([Digikey Link](https://www.digikey.in/en/products/detail/knowles/SPH0645LM4H-B-8/5332440?utm_adgroup=&utm_source=google&utm_medium=cpc&utm_campaign=PMax%20Shopping_Product_High%20ROAS&utm_term=&productid=&utm_content=&utm_id=go_cmp-20122528480_adg-_ad-__dev-c_ext-_prd-_sig-CjwKCAjw2dG1BhB4EiwA998cqMlGMO_oih1-gWPRN8xNetVlllujb_EjJR-z_RHxL1LfY9kpQJN1IBoCTQUQAvD_BwE&gad_source=1&gclid=CjwKCAjw2dG1BhB4EiwA998cqMlGMO_oih1-gWPRN8xNetVlllujb_EjJR-z_RHxL1LfY9kpQJN1IBoCTQUQAvD_BwE), [PDF](https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/908/SPH0645LM4H-B.pdf))
 - **USEFUL LINKS**
   - [Priyansu's KWS Github Page](https://github.com/Priyansu122/Project_keywordSpotter)
   - [Priyansu's RTL2GDS Github Page](https://github.com/Priyansu122/SI2024_RTL_TO_GDS)
