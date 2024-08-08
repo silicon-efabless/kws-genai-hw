@@ -23,7 +23,7 @@
 
 Mel frequency cepstral coefficient (MFCC) features are widely used in applications such as keyword spotting (KWS) for extracting speech features such as a simple word "Alexa". In a typical all-digital immplementation, a digital microphone is used to read real-time data using an $I^2S$ serial interface. The serial data is converted to parallel bytes. 
 
-The first operation done on the input data is a pre-emphasis filter (high-pass) to remove the DC content from the signal. The pre-emphasis filter is typicall implemented as the following difference equation: 
+The first operation done on the input data is a pre-emphasis filter (high-pass or HPF) to remove the DC content from the signal. The pre-emphasis filter is typicall implemented as the following difference equation: 
 
 $y(n) = x(n) - \alpha x(n-1)$
 
@@ -31,17 +31,10 @@ where $\alpha$ ranges from 0.9-1. To keep the hardware minimal, the fraction is 
 
 After the pre-emphasis filter, the data is multiplied with a _window (hamming, hanning, etc.))_ to avoid spectral leakage from FFT operation. After the windowing, fast-fourier transform (FFT) is applied to the signal to find the frequency content of the signal. Then the linear frequency scale if converted to _Mel Log scale_ ( $Mel(f) = 2595 \cdot log_{10}(1 + f/700)$ ) to mimic the human ear perception. Then the _log_ of Mel frequency power is calculated and the DCT operation is done to generate the MFCC co-efficients. Finally, the MFCC co-efficients are used to classify the voice signal using a classifier such as Convolution Neural Netwrk (CNN), etc.
 
-#OLD STUFF
-This project will aim to generate an entire hardware accelerator for the specific application of Keyword Spotting (KWS) using generative AI (gen-AI).
+Typically the MFCC and the classifier are implemented on the _Edge Node_ using a microcontroller. But with more and more computing moving to the edge, we are now at a point where some of the trivial or not-so-trivial computing to move to the sensor itself. In this work we propose to move some of the front-end signal processing (HPF, wondowing and FFT) to the microphone itself which may call as _Bleeding-Edge Computing_. 
 
-This project will target applications that are mostly dormant and are activated infrequently using a wake-up call such as "Wakeup Neo". It will also assume target applications to be very power conscious so it is using the bare minimum power when sleeping or dormant.
+# Proposed "Bleeding-Edge Computing" Architecture
 
-Keeping the above application in mind, we will target a two-step architecture where an ultra-low-power audio feature extraction algorithm will be implemented on a purely digital architecture, assuming that a digitized audio stream is provided as the input to this feature extractor while trading accuracy for power. This feature extractor will wake up an accurate hardware accelerator for KWS that can process a wide range of audio features more accurately, but at the expense of higher power consumption.
+The goal of this work is to create a minimalistic hardware for a microphone to read the FFT bins directly which can be used in the subsequent stages of the KWS architecutre on the host processor. This minimalist harware may come at an expense of accuracy but that is a trade-off often acceptable at system level, if available. Also, a longer term goal is to integrate the entire KWS architecture in the microphone that can run off energy harvested off the microphone itself, for example in piezo-electric microphones. 
 
-This project will not only demonstrate the use of Gen-AI to generate accurate hardware for high-performance applications, but also assist a non-expert as well. As analog designers, with minimal experience in digital design, we will take the help of gen-AI to come up with the right architecture for the above application with some skillful prompt engineering. Once the architecture has been verified to work with the above application, we will again take the help of Gen-AI to generate the hardware for the low-power feature extractor and the hardware accelerator for KWS. We will also use Gen-AI to assist designers in creating test plans for the generated design as well. It is understood that during the course of the project, the user will fine-tune the design without the help of gen-AI keeping it to as minimum as possible.
-
-# Architecture
-
-![KWS Architecture](doc/KWS-Arch.png)
-
-After initial interaction with Chat-GPT, the architecture for this project is as shown in the figure above. As mentioned in the abstract, this is a two-step architecture targeting that are mostly dormant and are activated infrequently using a wake-up call such as "Wakeup Neo". After initial interaction with Chat-GPT, we converged on a fixed-point Mel Log Filter to spot keywords. We want this filter to be consuming very little power at the expense of accuracy which is acceptable in this architecture. The microphone interface will be I2S, popular serial protocol for audio. The KWS will generate wake up call that will wakeup the keyword accelerator that can do complex voice recognition. 
+For this 
