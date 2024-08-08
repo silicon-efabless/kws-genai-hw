@@ -37,4 +37,9 @@ Typically the MFCC and the classifier are implemented on the _Edge Node_ using a
 
 The goal of this work is to create a minimalistic hardware for a microphone to read the FFT bins directly which can be used in the subsequent stages of the KWS architecutre on the host processor. This minimalist harware may come at an expense of accuracy but that is a trade-off often acceptable at system level, if available. Also, a longer term goal is to integrate the entire KWS architecture in the microphone that can run off energy harvested off the microphone itself, for example in piezo-electric microphones. 
 
-For this 
+This architecture was simulated using Python to optimize the hardware without losing significant accuracy. As the parameters were varied, the output spectogram (FFT vs. time) was visually inspected to make sure the harward-reduction-to-accuracy ratio was maximized. The following parameters were minimized which directly impacts the hardware:
+
+- **Input sampling frequency**: Typical audio sampling is 44.4kHz but it was found that even **4 kHz** does not result in siginificant loss in FFT accuracy. This will result in almost a 10X reduction of HW.
+- **Input data width**: Typical microphone data-width is 24-bit but linear only up to 10-11 bit but, **7-bit** data-width seems a good compromise.
+- **FFT data-point**: Typically 128-point or 256-point FFT are used but even going down to **32-point** seems still a good choice.
+
