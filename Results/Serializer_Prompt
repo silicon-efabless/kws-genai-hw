@@ -1,0 +1,42 @@
+Generate verilog code for the module in Verilog 2005:
+Inputs: """
+WS: 1 bit;
+Clk: 1 bit;
+data_in: 1bit;
+reset: 1 bit;
+"""
+Outputs: """
+hanning_en: 1 bit;
+"""
+Instructions:"""
+Create 7-width 32-depth FIFO called FIFO_out;
+Create 2 empty 7-bit registers: register1 and register2;
+when WS is true, read data_in and push into register1;
+Continue reading data_in every clock cycle until 7 bits added to register1;
+Use bit_counter variable to check when a 7-bit value has been added;
+Do not set bit_counter back to 0 after 7-bit value has been read;
+Only set bit_counter back to 0 when WS signal turned off;
+Once bit_counter value is exactly 7, check if register2 has value;
+If value in register2, implement following equation: y(n) = x(n) - (x(n-1) - x(n-1)/32));
+In equation above, x(n) is register1 value and x(n-1) is register2 value;
+If no value in register2, implement following equation: y(n) = x(n) - (x(n) - x(n)/32));
+Store y(n) into FIFO_out;
+Use write_ptr to store y(n) in specific FIFO row;
+Push register1 value into register2 and clear register1;
+After clearing register1, set bit_counter to 8;
+Wait until WS turns off and on to read a new set of values;
+Once FIFO_out full, turn on hanning_en for 1 clock cycle;
+To check if FIFO is full, check if write_ptr is 1 less than FIFO depth;
+After hanning_en is set back to 0, remove 16 oldest values in FIFO and move remaining values down 16 rows;
+On reset, set all register values to 0;
+"""
+
+Additional Information:"""
+module name is Serializer;
+do not user a state machine;
+define all variables at start of module outside of always and initial functions;
+only read 7 bits from data_in each WS positive signal;
+Only set bit counter to 0 when WS signal if off;
+Module should be in Verilog-2005 syntax;
+Loop counters should be integer variables;
+"""

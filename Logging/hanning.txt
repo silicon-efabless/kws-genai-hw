@@ -1,0 +1,836 @@
+Prompt:
+Generate verilog code for the module in Verilog 2005:
+Inputs: """
+pre_emph_in: 7 bit;
+i2s_ws: 1 bit;
+win_sel: 1 bit;
+ovl_frame: 1 bit;
+rst_n: 1 bit;
+"""
+
+Outputs: """
+reg [6:0] frame [31:0];
+"""
+
+Instructions:"""
+rst_n is active low reset that resets all register values to 0;
+Create reg [6:0] fifo [31:0], 32-byte 7-bit FIFO or a shift-register sampled at the negative edge of i2s_ws;
+Input of the FIFO is pre_emph_in;
+Create internal wire [6:0] hanning [31:0] which is assigned the following:
+   assign hanning[0] = fifo[0] >>6
+   assign hanning[1] = fifo[1] >>5
+   assign hanning[2] = fifo[2] >>4
+   assign hanning[3] = fifo[3] >>3
+   assign hanning[4] = fifo[4] >>2
+   assign hanning[5] = fifo[5] >>1
+   assign hanning[6] = fifo[6] >>1
+   assign hanning[7] = fifo[7] >>1
+   assign hanning[8] = fifo[8] >>1
+   assign hanning[9] = fifo[9]
+   assign hanning[10] = fifo[10]
+   assign hanning[11] = fifo[11]
+   assign hanning[12] = fifo[12]
+   assign hanning[13] = fifo[13]
+   assign hanning[14] = fifo[14]
+   assign hanning[15] = fifo[15]
+   assign hanning[16] = fifo[16]
+   assign hanning[17] = fifo[17]
+   assign hanning[18] = fifo[18]
+   assign hanning[19] = fifo[19]
+   assign hanning[20] = fifo[20]
+   assign hanning[21] = fifo[21]
+   assign hanning[22] = fifo[22]
+   assign hanning[23] = fifo[23] >>1
+   assign hanning[24] = fifo[24] >>1
+   assign hanning[25] = fifo[25] >>1
+   assign hanning[26] = fifo[26] >>1
+   assign hanning[27] = fifo[27] >>2
+   assign hanning[28] = fifo[28] >>3
+   assign hanning[29] = fifo[29] >>4
+   assign hanning[30] = fifo[30] >>5
+   assign hanning[31] = fifo[31] >>6
+;
+create 4-bit counter name sample_count;
+
+output reg frame is sampled following this logic:
+  for every positive edge of i2s_ws:
+    if ( (ovl_frame == 1) and (sample_count == 15):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+    else if ( (ovl_frame == 0) and (sample_count == 31):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+;
+"""
+
+Additional Information:"""
+module name is windowing;
+Do not use initial blocks;
+Define all variables at start of module outside of always blocks;
+Module should be in Verilog-2005 syntax;
+Loop counters should be expressed in explicit bit widths;
+"""
+
+
+
+Output:
+module windowing (
+    input wire [6:0] pre_emph_in,
+    input wire i2s_ws,
+    input wire win_sel,
+    input wire ovl_frame,
+    input wire rst_n,
+    output reg [6:0] frame [31:0]
+);
+
+    // Internal Registers and Wires
+    reg [6:0] fifo [31:0];
+    reg [3:0] sample_count;
+    wire [6:0] hanning [31:0];
+
+    // Generate Hanning Window Values
+    assign hanning[0]  = fifo[0]  >> 6;
+    assign hanning[1]  = fifo[1]  >> 5;
+    assign hanning[2]  = fifo[2]  >> 4;
+    assign hanning[3]  = fifo[3]  >> 3;
+    assign hanning[4]  = fifo[4]  >> 2;
+    assign hanning[5]  = fifo[5]  >> 1;
+    assign hanning[6]  = fifo[6]  >> 1;
+    assign hanning[7]  = fifo[7]  >> 1;
+    assign hanning[8]  = fifo[8]  >> 1;
+    assign hanning[9]  = fifo[9];
+    assign hanning[10] = fifo[10];
+    assign hanning[11] = fifo[11];
+    assign hanning[12] = fifo[12];
+    assign hanning[13] = fifo[13];
+    assign hanning[14] = fifo[14];
+    assign hanning[15] = fifo[15];
+    assign hanning[16] = fifo[16];
+    assign hanning[17] = fifo[17];
+    assign hanning[18] = fifo[18];
+    assign hanning[19] = fifo[19];
+    assign hanning[20] = fifo[20];
+    assign hanning[21] = fifo[21];
+    assign hanning[22] = fifo[22];
+    assign hanning[23] = fifo[23] >> 1;
+    assign hanning[24] = fifo[24] >> 1;
+    assign hanning[25] = fifo[25] >> 1;
+    assign hanning[26] = fifo[26] >> 1;
+    assign hanning[27] = fifo[27] >> 2;
+    assign hanning[28] = fifo[28] >> 3;
+    assign hanning[29] = fifo[29] >> 4;
+    assign hanning[30] = fifo[30] >> 5;
+    assign hanning[31] = fifo[31] >> 6;
+
+    // Sampling and Reset Logic
+    always @(negedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            sample_count <= 4'b0000;
+            fifo[0] <= 7'b0000000;
+            fifo[1] <= 7'b0000000;
+            fifo[2] <= 7'b0000000;
+            fifo[3] <= 7'b0000000;
+            fifo[4] <= 7'b0000000;
+            fifo[5] <= 7'b0000000;
+            fifo[6] <= 7'b0000000;
+            fifo[7] <= 7'b0000000;
+            fifo[8] <= 7'b0000000;
+            fifo[9] <= 7'b0000000;
+            fifo[10] <= 7'b0000000;
+            fifo[11] <= 7'b0000000;
+            fifo[12] <= 7'b0000000;
+            fifo[13] <= 7'b0000000;
+            fifo[14] <= 7'b0000000;
+            fifo[15] <= 7'b0000000;
+            fifo[16] <= 7'b0000000;
+            fifo[17] <= 7'b0000000;
+            fifo[18] <= 7'b0000000;
+            fifo[19] <= 7'b0000000;
+            fifo[20] <= 7'b0000000;
+            fifo[21] <= 7'b0000000;
+            fifo[22] <= 7'b0000000;
+            fifo[23] <= 7'b0000000;
+            fifo[24] <= 7'b0000000;
+            fifo[25] <= 7'b0000000;
+            fifo[26] <= 7'b0000000;
+            fifo[27] <= 7'b0000000;
+            fifo[28] <= 7'b0000000;
+            fifo[29] <= 7'b0000000;
+            fifo[30] <= 7'b0000000;
+            fifo[31] <= 7'b0000000;
+        end else begin
+            // Shift FIFO and load new input
+            sample_count <= sample_count + 4'b0001;
+            fifo[31:1] <= fifo[30:0];
+            fifo[0] <= pre_emph_in;
+        end
+    end
+
+    // Frame Sampling Logic
+    always @(posedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            frame[0] <= 7'b0000000;
+            frame[1] <= 7'b0000000;
+            frame[2] <= 7'b0000000;
+            frame[3] <= 7'b0000000;
+            frame[4] <= 7'b0000000;
+            frame[5] <= 7'b0000000;
+            frame[6] <= 7'b0000000;
+            frame[7] <= 7'b0000000;
+            frame[8] <= 7'b0000000;
+            frame[9] <= 7'b0000000;
+            frame[10] <= 7'b0000000;
+            frame[11] <= 7'b0000000;
+            frame[12] <= 7'b0000000;
+            frame[13] <= 7'b0000000;
+            frame[14] <= 7'b0000000;
+            frame[15] <= 7'b0000000;
+            frame[16] <= 7'b0000000;
+            frame[17] <= 7'b0000000;
+            frame[18] <= 7'b0000000;
+            frame[19] <= 7'b0000000;
+            frame[20] <= 7'b0000000;
+            frame[21] <= 7'b0000000;
+            frame[22] <= 7'b0000000;
+            frame[23] <= 7'b0000000;
+            frame[24] <= 7'b0000000;
+            frame[25] <= 7'b0000000;
+            frame[26] <= 7'b0000000;
+            frame[27] <= 7'b0000000;
+            frame[28] <= 7'b0000000;
+            frame[29] <= 7'b0000000;
+            frame[30] <= 7'b0000000;
+            frame[31] <= 7'b0000000;
+        end else begin
+            if (ovl_frame && sample_count == 4'b1111) begin
+                if (!win_sel) begin
+                    frame <= hanning;
+                end else begin
+                    frame <= fifo;
+                end
+            end else if (!ovl_frame && sample_count == 4'b11111) begin
+                if (!win_sel) begin
+                    frame <= hanning;
+                end else begin
+                    frame <= fifo;
+                end
+            end
+        end
+    end
+
+endmodule
+
+
+
+Problem:
+sample_count needs to be 5 bits
+Error: hanning.v:131: error: Assignment to an entire array or to an array slice requires SystemVerilog.
+
+
+
+Prompt:
+Generate verilog code for the module in Verilog 2005:
+Inputs: """
+pre_emph_in: 7 bit;
+i2s_ws: 1 bit;
+win_sel: 1 bit;
+ovl_frame: 1 bit;
+rst_n: 1 bit;
+"""
+
+Outputs: """
+reg [6:0] frame [31:0];
+"""
+
+Instructions:"""
+rst_n is active low reset that resets all register values to 0;
+Create reg [6:0] fifo [31:0], 32-byte 7-bit FIFO or a shift-register sampled at the negative edge of i2s_ws;
+Input of the FIFO is pre_emph_in;
+Create internal wire [6:0] hanning [31:0] which is assigned the following:
+   assign hanning[0] = fifo[0] >>6
+   assign hanning[1] = fifo[1] >>5
+   assign hanning[2] = fifo[2] >>4
+   assign hanning[3] = fifo[3] >>3
+   assign hanning[4] = fifo[4] >>2
+   assign hanning[5] = fifo[5] >>1
+   assign hanning[6] = fifo[6] >>1
+   assign hanning[7] = fifo[7] >>1
+   assign hanning[8] = fifo[8] >>1
+   assign hanning[9] = fifo[9]
+   assign hanning[10] = fifo[10]
+   assign hanning[11] = fifo[11]
+   assign hanning[12] = fifo[12]
+   assign hanning[13] = fifo[13]
+   assign hanning[14] = fifo[14]
+   assign hanning[15] = fifo[15]
+   assign hanning[16] = fifo[16]
+   assign hanning[17] = fifo[17]
+   assign hanning[18] = fifo[18]
+   assign hanning[19] = fifo[19]
+   assign hanning[20] = fifo[20]
+   assign hanning[21] = fifo[21]
+   assign hanning[22] = fifo[22]
+   assign hanning[23] = fifo[23] >>1
+   assign hanning[24] = fifo[24] >>1
+   assign hanning[25] = fifo[25] >>1
+   assign hanning[26] = fifo[26] >>1
+   assign hanning[27] = fifo[27] >>2
+   assign hanning[28] = fifo[28] >>3
+   assign hanning[29] = fifo[29] >>4
+   assign hanning[30] = fifo[30] >>5
+   assign hanning[31] = fifo[31] >>6
+;
+create 5-bit counter name sample_count;
+
+output reg frame is sampled following this logic:
+  for every positive edge of i2s_ws:
+    if ( (ovl_frame == 1) and (sample_count == 15):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+    else if ( (ovl_frame == 0) and (sample_count == 31):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+;
+"""
+
+Additional Information:"""
+module name is windowing;
+Do not use initial blocks;
+Define all variables at start of module outside of always blocks;
+Module should be in Verilog-2005 syntax;
+Loop counters should be expressed in explicit bit widths;
+"""
+
+
+
+Output:
+module windowing (
+    input wire [6:0] pre_emph_in,
+    input wire i2s_ws,
+    input wire win_sel,
+    input wire ovl_frame,
+    input wire rst_n,
+    output reg [6:0] frame [31:0]
+);
+
+    // Internal Registers and Wires
+    reg [6:0] fifo [31:0];
+    reg [4:0] sample_count;
+    wire [6:0] hanning [31:0];
+
+    // Generate Hanning Window Values
+    assign hanning[0]  = fifo[0]  >> 6;
+    assign hanning[1]  = fifo[1]  >> 5;
+    assign hanning[2]  = fifo[2]  >> 4;
+    assign hanning[3]  = fifo[3]  >> 3;
+    assign hanning[4]  = fifo[4]  >> 2;
+    assign hanning[5]  = fifo[5]  >> 1;
+    assign hanning[6]  = fifo[6]  >> 1;
+    assign hanning[7]  = fifo[7]  >> 1;
+    assign hanning[8]  = fifo[8]  >> 1;
+    assign hanning[9]  = fifo[9];
+    assign hanning[10] = fifo[10];
+    assign hanning[11] = fifo[11];
+    assign hanning[12] = fifo[12];
+    assign hanning[13] = fifo[13];
+    assign hanning[14] = fifo[14];
+    assign hanning[15] = fifo[15];
+    assign hanning[16] = fifo[16];
+    assign hanning[17] = fifo[17];
+    assign hanning[18] = fifo[18];
+    assign hanning[19] = fifo[19];
+    assign hanning[20] = fifo[20];
+    assign hanning[21] = fifo[21];
+    assign hanning[22] = fifo[22];
+    assign hanning[23] = fifo[23] >> 1;
+    assign hanning[24] = fifo[24] >> 1;
+    assign hanning[25] = fifo[25] >> 1;
+    assign hanning[26] = fifo[26] >> 1;
+    assign hanning[27] = fifo[27] >> 2;
+    assign hanning[28] = fifo[28] >> 3;
+    assign hanning[29] = fifo[29] >> 4;
+    assign hanning[30] = fifo[30] >> 5;
+    assign hanning[31] = fifo[31] >> 6;
+
+    // Sampling and Reset Logic
+    always @(negedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            sample_count <= 4'b0000;
+            fifo[0] <= 7'b0000000;
+            fifo[1] <= 7'b0000000;
+            fifo[2] <= 7'b0000000;
+            fifo[3] <= 7'b0000000;
+            fifo[4] <= 7'b0000000;
+            fifo[5] <= 7'b0000000;
+            fifo[6] <= 7'b0000000;
+            fifo[7] <= 7'b0000000;
+            fifo[8] <= 7'b0000000;
+            fifo[9] <= 7'b0000000;
+            fifo[10] <= 7'b0000000;
+            fifo[11] <= 7'b0000000;
+            fifo[12] <= 7'b0000000;
+            fifo[13] <= 7'b0000000;
+            fifo[14] <= 7'b0000000;
+            fifo[15] <= 7'b0000000;
+            fifo[16] <= 7'b0000000;
+            fifo[17] <= 7'b0000000;
+            fifo[18] <= 7'b0000000;
+            fifo[19] <= 7'b0000000;
+            fifo[20] <= 7'b0000000;
+            fifo[21] <= 7'b0000000;
+            fifo[22] <= 7'b0000000;
+            fifo[23] <= 7'b0000000;
+            fifo[24] <= 7'b0000000;
+            fifo[25] <= 7'b0000000;
+            fifo[26] <= 7'b0000000;
+            fifo[27] <= 7'b0000000;
+            fifo[28] <= 7'b0000000;
+            fifo[29] <= 7'b0000000;
+            fifo[30] <= 7'b0000000;
+            fifo[31] <= 7'b0000000;
+        end else begin
+            // Shift FIFO and load new input
+            sample_count <= sample_count + 4'b0001;
+            fifo[31:1] <= fifo[30:0];
+            fifo[0] <= pre_emph_in;
+        end
+    end
+
+    // Frame Sampling Logic
+    always @(posedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            frame[0] <= 7'b0000000;
+            frame[1] <= 7'b0000000;
+            frame[2] <= 7'b0000000;
+            frame[3] <= 7'b0000000;
+            frame[4] <= 7'b0000000;
+            frame[5] <= 7'b0000000;
+            frame[6] <= 7'b0000000;
+            frame[7] <= 7'b0000000;
+            frame[8] <= 7'b0000000;
+            frame[9] <= 7'b0000000;
+            frame[10] <= 7'b0000000;
+            frame[11] <= 7'b0000000;
+            frame[12] <= 7'b0000000;
+            frame[13] <= 7'b0000000;
+            frame[14] <= 7'b0000000;
+            frame[15] <= 7'b0000000;
+            frame[16] <= 7'b0000000;
+            frame[17] <= 7'b0000000;
+            frame[18] <= 7'b0000000;
+            frame[19] <= 7'b0000000;
+            frame[20] <= 7'b0000000;
+            frame[21] <= 7'b0000000;
+            frame[22] <= 7'b0000000;
+            frame[23] <= 7'b0000000;
+            frame[24] <= 7'b0000000;
+            frame[25] <= 7'b0000000;
+            frame[26] <= 7'b0000000;
+            frame[27] <= 7'b0000000;
+            frame[28] <= 7'b0000000;
+            frame[29] <= 7'b0000000;
+            frame[30] <= 7'b0000000;
+            frame[31] <= 7'b0000000;
+        end else begin
+            if (ovl_frame && sample_count == 5'b01111) begin
+                if (!win_sel) begin
+                    frame <= hanning;
+                end else begin
+                    frame <= fifo;
+                end
+            end else if (!ovl_frame && sample_count == 5'b11111) begin
+                if (!win_sel) begin
+                    frame <= hanning;
+                end else begin
+                    frame <= fifo;
+                end
+            end
+        end
+    end
+
+endmodule
+
+
+
+Problem:
+Error: hanning.v:131: error: Assignment to an entire array or to an array slice requires SystemVerilog.
+
+
+
+Prompt:
+Generate verilog code for the module in Verilog 2005:
+Inputs: """
+pre_emph_in: 7 bit;
+i2s_ws: 1 bit;
+win_sel: 1 bit;
+ovl_frame: 1 bit;
+rst_n: 1 bit;
+"""
+
+Outputs: """
+reg [6:0] frame [31:0];
+"""
+
+Instructions:"""
+rst_n is active low reset that resets all register values to 0;
+Create reg [6:0] fifo [31:0], 32-byte 7-bit FIFO or a shift-register sampled at the negative edge of i2s_ws;
+Input of the FIFO is pre_emph_in;
+Create internal wire [6:0] hanning [31:0] which is assigned the following:
+   assign hanning[0] = fifo[0] >>6
+   assign hanning[1] = fifo[1] >>5
+   assign hanning[2] = fifo[2] >>4
+   assign hanning[3] = fifo[3] >>3
+   assign hanning[4] = fifo[4] >>2
+   assign hanning[5] = fifo[5] >>1
+   assign hanning[6] = fifo[6] >>1
+   assign hanning[7] = fifo[7] >>1
+   assign hanning[8] = fifo[8] >>1
+   assign hanning[9] = fifo[9]
+   assign hanning[10] = fifo[10]
+   assign hanning[11] = fifo[11]
+   assign hanning[12] = fifo[12]
+   assign hanning[13] = fifo[13]
+   assign hanning[14] = fifo[14]
+   assign hanning[15] = fifo[15]
+   assign hanning[16] = fifo[16]
+   assign hanning[17] = fifo[17]
+   assign hanning[18] = fifo[18]
+   assign hanning[19] = fifo[19]
+   assign hanning[20] = fifo[20]
+   assign hanning[21] = fifo[21]
+   assign hanning[22] = fifo[22]
+   assign hanning[23] = fifo[23] >>1
+   assign hanning[24] = fifo[24] >>1
+   assign hanning[25] = fifo[25] >>1
+   assign hanning[26] = fifo[26] >>1
+   assign hanning[27] = fifo[27] >>2
+   assign hanning[28] = fifo[28] >>3
+   assign hanning[29] = fifo[29] >>4
+   assign hanning[30] = fifo[30] >>5
+   assign hanning[31] = fifo[31] >>6
+;
+create 5-bit counter name sample_count;
+
+output reg frame is sampled following this logic:
+  for every positive edge of i2s_ws:
+    if ( (ovl_frame == 1) and (sample_count == 15):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+    else if ( (ovl_frame == 0) and (sample_count == 31):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+;
+"""
+
+Additional Information:"""
+module name is windowing;
+Do not use initial blocks;
+Define all variables at start of module outside of always blocks;
+Module should be in Verilog-2005 syntax;
+Verilog-2005 does not support assignment to array splices or full array;
+To store values in array, store value in each array row individually;
+Loop counters should be expressed in explicit bit widths;
+"""
+
+
+
+Output:
+module windowing (
+    input wire [6:0] pre_emph_in,
+    input wire i2s_ws,
+    input wire win_sel,
+    input wire ovl_frame,
+    input wire rst_n,
+    output reg [6:0] frame [31:0]
+);
+
+    // Internal Registers and Wires
+    reg [6:0] fifo [31:0];
+    reg [4:0] sample_count;
+    wire [6:0] hanning [31:0];
+    integer i;
+
+    // Generate Hanning Window Values
+    assign hanning[0]  = fifo[0]  >> 6;
+    assign hanning[1]  = fifo[1]  >> 5;
+    assign hanning[2]  = fifo[2]  >> 4;
+    assign hanning[3]  = fifo[3]  >> 3;
+    assign hanning[4]  = fifo[4]  >> 2;
+    assign hanning[5]  = fifo[5]  >> 1;
+    assign hanning[6]  = fifo[6]  >> 1;
+    assign hanning[7]  = fifo[7]  >> 1;
+    assign hanning[8]  = fifo[8]  >> 1;
+    assign hanning[9]  = fifo[9];
+    assign hanning[10] = fifo[10];
+    assign hanning[11] = fifo[11];
+    assign hanning[12] = fifo[12];
+    assign hanning[13] = fifo[13];
+    assign hanning[14] = fifo[14];
+    assign hanning[15] = fifo[15];
+    assign hanning[16] = fifo[16];
+    assign hanning[17] = fifo[17];
+    assign hanning[18] = fifo[18];
+    assign hanning[19] = fifo[19];
+    assign hanning[20] = fifo[20];
+    assign hanning[21] = fifo[21];
+    assign hanning[22] = fifo[22];
+    assign hanning[23] = fifo[23] >> 1;
+    assign hanning[24] = fifo[24] >> 1;
+    assign hanning[25] = fifo[25] >> 1;
+    assign hanning[26] = fifo[26] >> 1;
+    assign hanning[27] = fifo[27] >> 2;
+    assign hanning[28] = fifo[28] >> 3;
+    assign hanning[29] = fifo[29] >> 4;
+    assign hanning[30] = fifo[30] >> 5;
+    assign hanning[31] = fifo[31] >> 6;
+
+    // Sampling and Reset Logic
+    always @(negedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            sample_count <= 5'b00000;
+            for (i = 0; i < 32; i = i + 1) begin
+                fifo[i] <= 7'b0000000;
+            end
+        end else begin
+            // Shift FIFO and load new input
+            for (i = 31; i > 0; i = i - 1) begin
+                fifo[i] <= fifo[i-1];
+            end
+            fifo[0] <= pre_emph_in;
+            sample_count <= sample_count + 5'b00001;
+        end
+    end
+
+    // Frame Sampling Logic
+    always @(posedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            for (i = 0; i < 32; i = i + 1) begin
+                frame[i] <= 7'b0000000;
+            end
+        end else begin
+            if (ovl_frame && sample_count == 5'b01111) begin
+                if (!win_sel) begin
+                    for (i = 0; i < 32; i = i + 1) begin
+                        frame[i] <= hanning[i];
+                    end
+                end else begin
+                    for (i = 0; i < 32; i = i + 1) begin
+                        frame[i] <= fifo[i];
+                    end
+                end
+            end else if (!ovl_frame && sample_count == 5'b11111) begin
+                if (!win_sel) begin
+                    for (i = 0; i < 32; i = i + 1) begin
+                        frame[i] <= hanning[i];
+                    end
+                end else begin
+                    for (i = 0; i < 32; i = i + 1) begin
+                        frame[i] <= fifo[i];
+                    end
+                end
+            end
+        end
+    end
+
+endmodule
+
+
+
+Problem:
+Using integer variable
+
+
+
+Prompt:
+Generate verilog code for the module in Verilog 2005:
+Inputs: """
+pre_emph_in: 7 bit;
+i2s_ws: 1 bit;
+win_sel: 1 bit;
+ovl_frame: 1 bit;
+rst_n: 1 bit;
+"""
+
+Outputs: """
+reg [6:0] frame [31:0];
+"""
+
+Instructions:"""
+rst_n is active low reset that resets all register values to 0;
+Create reg [6:0] fifo [31:0], 32-byte 7-bit FIFO or a shift-register sampled at the negative edge of i2s_ws;
+Input of the FIFO is pre_emph_in;
+Create internal wire [6:0] hanning [31:0] which is assigned the following:
+   assign hanning[0] = fifo[0] >>6
+   assign hanning[1] = fifo[1] >>5
+   assign hanning[2] = fifo[2] >>4
+   assign hanning[3] = fifo[3] >>3
+   assign hanning[4] = fifo[4] >>2
+   assign hanning[5] = fifo[5] >>1
+   assign hanning[6] = fifo[6] >>1
+   assign hanning[7] = fifo[7] >>1
+   assign hanning[8] = fifo[8] >>1
+   assign hanning[9] = fifo[9]
+   assign hanning[10] = fifo[10]
+   assign hanning[11] = fifo[11]
+   assign hanning[12] = fifo[12]
+   assign hanning[13] = fifo[13]
+   assign hanning[14] = fifo[14]
+   assign hanning[15] = fifo[15]
+   assign hanning[16] = fifo[16]
+   assign hanning[17] = fifo[17]
+   assign hanning[18] = fifo[18]
+   assign hanning[19] = fifo[19]
+   assign hanning[20] = fifo[20]
+   assign hanning[21] = fifo[21]
+   assign hanning[22] = fifo[22]
+   assign hanning[23] = fifo[23] >>1
+   assign hanning[24] = fifo[24] >>1
+   assign hanning[25] = fifo[25] >>1
+   assign hanning[26] = fifo[26] >>1
+   assign hanning[27] = fifo[27] >>2
+   assign hanning[28] = fifo[28] >>3
+   assign hanning[29] = fifo[29] >>4
+   assign hanning[30] = fifo[30] >>5
+   assign hanning[31] = fifo[31] >>6
+;
+create 5-bit counter name sample_count;
+
+output reg frame is sampled following this logic:
+  for every positive edge of i2s_ws:
+    if ( (ovl_frame == 1) and (sample_count == 15):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+    else if ( (ovl_frame == 0) and (sample_count == 31):
+       if ( win_sel == 0):
+            frame = hanning
+       else
+            frame = fifo
+;
+"""
+
+Additional Information:"""
+module name is windowing;
+Do not use initial blocks;
+Define all variables at start of module outside of always blocks;
+Module should be in Verilog-2005 syntax;
+Verilog-2005 does not support assignment to array splices or full array;
+To store values in array, store value in each array row individually;
+Use fixed-bit variables instead of integers;
+Loop counters should be expressed in explicit bit widths;
+"""
+
+
+
+Output:
+module windowing (
+    input wire [6:0] pre_emph_in,
+    input wire i2s_ws,
+    input wire win_sel,
+    input wire ovl_frame,
+    input wire rst_n,
+    output reg [6:0] frame [31:0]
+);
+
+    // Internal Registers and Wires
+    reg [6:0] fifo [31:0];
+    reg [4:0] sample_count;
+    wire [6:0] hanning [31:0];
+    reg [4:0] i; // Explicit bit-width for loop counter
+
+    // Generate Hanning Window Values
+    assign hanning[0]  = fifo[0]  >> 6;
+    assign hanning[1]  = fifo[1]  >> 5;
+    assign hanning[2]  = fifo[2]  >> 4;
+    assign hanning[3]  = fifo[3]  >> 3;
+    assign hanning[4]  = fifo[4]  >> 2;
+    assign hanning[5]  = fifo[5]  >> 1;
+    assign hanning[6]  = fifo[6]  >> 1;
+    assign hanning[7]  = fifo[7]  >> 1;
+    assign hanning[8]  = fifo[8]  >> 1;
+    assign hanning[9]  = fifo[9];
+    assign hanning[10] = fifo[10];
+    assign hanning[11] = fifo[11];
+    assign hanning[12] = fifo[12];
+    assign hanning[13] = fifo[13];
+    assign hanning[14] = fifo[14];
+    assign hanning[15] = fifo[15];
+    assign hanning[16] = fifo[16];
+    assign hanning[17] = fifo[17];
+    assign hanning[18] = fifo[18];
+    assign hanning[19] = fifo[19];
+    assign hanning[20] = fifo[20];
+    assign hanning[21] = fifo[21];
+    assign hanning[22] = fifo[22];
+    assign hanning[23] = fifo[23] >> 1;
+    assign hanning[24] = fifo[24] >> 1;
+    assign hanning[25] = fifo[25] >> 1;
+    assign hanning[26] = fifo[26] >> 1;
+    assign hanning[27] = fifo[27] >> 2;
+    assign hanning[28] = fifo[28] >> 3;
+    assign hanning[29] = fifo[29] >> 4;
+    assign hanning[30] = fifo[30] >> 5;
+    assign hanning[31] = fifo[31] >> 6;
+
+    // Sampling and Reset Logic
+    always @(negedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            sample_count <= 5'b00000;
+            for (i = 5'b00000; i < 5'b10000; i = i + 5'b00001) begin
+                fifo[i] <= 7'b0000000;
+            end
+        end else begin
+            // Shift FIFO and load new input
+            for (i = 5'b11111; i > 5'b00000; i = i - 5'b00001) begin
+                fifo[i] <= fifo[i-1];
+            end
+            fifo[5'b00000] <= pre_emph_in;
+            sample_count <= sample_count + 5'b00001;
+        end
+    end
+
+    // Frame Sampling Logic
+    always @(posedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            for (i = 5'b00000; i < 5'b10000; i = i + 5'b00001) begin
+                frame[i] <= 7'b0000000;
+            end
+        end else begin
+            if (ovl_frame && (sample_count == 5'b01111)) begin
+                if (!win_sel) begin
+                    for (i = 5'b00000; i < 5'b10000; i = i + 5'b00001) begin
+                        frame[i] <= hanning[i];
+                    end
+                end else begin
+                    for (i = 5'b00000; i < 5'b10000; i = i + 5'b00001) begin
+                        frame[i] <= fifo[i];
+                    end
+                end
+            end else if (!ovl_frame && (sample_count == 5'b11111)) begin
+                if (!win_sel) begin
+                    for (i = 5'b00000; i < 5'b10000; i = i + 5'b00001) begin
+                        frame[i] <= hanning[i];
+                    end
+                end else begin
+                    for (i = 5'b00000; i < 5'b10000; i = i + 5'b00001) begin
+                        frame[i] <= fifo[i];
+                    end
+                end
+            end
+        end
+    end
+
+endmodule

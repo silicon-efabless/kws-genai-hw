@@ -1,0 +1,52 @@
+Prompt:
+Generate verilog code for the module in Verilog 2005:
+Inputs: """
+i2s_ws: 1 bit;
+rst_n: 1 bit;
+mic_sample: 7-bit;
+"""
+Outputs: """
+pre_emph_out: 7-bit;
+"""
+Instructions:"""
+rst_n is active low reset that resets all register values to 0;
+Sample mic_sample with a 7-bit register named mic_prev_sample every positive edge of i2s_ws;
+register pre_emph_out = mic_sample - mic_prev_sample + mic_prev_sample>>5;
+sample pre_emph_out at the negative edge of i2s_ws;
+"""
+Additional Information:"""
+module name is pre_emphasis;
+Do not use initial blocks;
+Define all variables at start of module outside of always blocks;
+Module should be in Verilog-2005 syntax;
+Loop counters should be expressed in explicit bit widths;
+"""
+
+
+
+Output:
+module pre_emphasis (
+    input wire i2s_ws,             // 1-bit input signal
+    input wire rst_n,              // 1-bit active-low reset
+    input wire [6:0] mic_sample,   // 7-bit input sample
+    output reg [6:0] pre_emph_out  // 7-bit output pre-emphasized sample
+);
+    // Internal 7-bit register to store the previous sample
+    reg [6:0] mic_prev_sample;
+    // Always block for sampling the mic_sample on the positive edge of i2s_ws
+    always @(posedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            mic_prev_sample <= 7'b0;
+        end else begin
+            mic_prev_sample <= mic_sample;
+        end
+    end
+    // Always block for computing pre_emph_out on the negative edge of i2s_ws
+    always @(negedge i2s_ws or negedge rst_n) begin
+        if (!rst_n) begin
+            pre_emph_out <= 7'b0;
+        end else begin
+            pre_emph_out <= mic_sample - mic_prev_sample + (mic_prev_sample >> 5);
+        end
+    end
+endmodule
